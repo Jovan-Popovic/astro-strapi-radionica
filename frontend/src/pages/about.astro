@@ -1,10 +1,31 @@
 ---
+import Card from "../components/Card.astro";
 import Layout from "../layouts/Layout.astro";
+import { articlesService } from "../services/articles";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const promiseData = await articlesService.getArticles();
+const articles = await promiseData.json();
+console.log(articles.data[0].category);
 ---
 
 <Layout>
+  <div
+    class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-700 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+  >
+    {
+      articles.data.map(
+        ({ id, title, description, createdAt, category, author }) => (
+          <Card
+            createdAt={createdAt}
+            category={category.name}
+            title={title}
+            description={description}
+            author={author.name}
+          />
+        )
+      )
+    }
+  </div>
+
   <h1>About page</h1>
 </Layout>
